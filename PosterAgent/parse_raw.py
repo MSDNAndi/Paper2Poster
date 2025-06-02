@@ -3,6 +3,7 @@ from utils.src.utils import get_json_from_response
 from utils.src.model_utils import parse_pdf
 import json
 import random
+import os
 
 from camel.models import ModelFactory
 from camel.agents import ChatAgent
@@ -28,7 +29,21 @@ from jinja2 import Template
 import re
 import argparse
 
-load_dotenv()
+# Load environment variables - look for .env file in project root
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Find the project root (look for files that indicate project root)
+def find_project_root():
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if (parent / 'requirements.txt').exists() and (parent / 'PosterAgent').exists():
+            return parent
+    return current.parent
+
+project_root = find_project_root()
+dotenv_path = project_root / '.env'
+load_dotenv(dotenv_path)
 IMAGE_RESOLUTION_SCALE = 5.0
 
 pipeline_options = PdfPipelineOptions()
