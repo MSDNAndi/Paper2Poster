@@ -24,6 +24,9 @@ from utils.pptx_utils import *
 from utils.critic_utils import *
 
 def get_agent_config(model_type):
+    # Check environment variables for platform override
+    model_platform_env = os.environ.get('MODEL_PLATFORM', '').lower()
+    
     agent_config = {}
     if model_type == 'qwen':
         agent_config = {
@@ -117,31 +120,63 @@ def get_agent_config(model_type):
             "model_platform": ModelPlatformType.OPENAI,
         }
     elif model_type == '4o':
-        agent_config = {
-            "model_type": ModelType.GPT_4O,
-            "model_config": ChatGPTConfig().as_dict(),
-            "model_platform": ModelPlatformType.OPENAI,
-            # "model_name": '4o'
-        }
+        # Check if Azure platform is requested via environment variable
+        if model_platform_env == 'azure':
+            agent_config = {
+                "model_type": ModelType.GPT_4O,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.AZURE,
+            }
+        else:
+            agent_config = {
+                "model_type": ModelType.GPT_4O,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.OPENAI,
+                # "model_name": '4o'
+            }
     elif model_type == '4o-mini':
-        agent_config = {
-            "model_type": ModelType.GPT_4O_MINI,
-            "model_config": ChatGPTConfig().as_dict(),
-            "model_platform": ModelPlatformType.OPENAI,
-        }
+        # Check if Azure platform is requested via environment variable
+        if model_platform_env == 'azure':
+            agent_config = {
+                "model_type": ModelType.GPT_4O_MINI,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.AZURE,
+            }
+        else:
+            agent_config = {
+                "model_type": ModelType.GPT_4O_MINI,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.OPENAI,
+            }
     elif model_type == 'o1':
-        agent_config = {
-            "model_type": ModelType.O1,
-            "model_config": ChatGPTConfig().as_dict(),
-            "model_platform": ModelPlatformType.OPENAI,
-            # "model_name": 'o1'
-        }
+        # Check if Azure platform is requested via environment variable
+        if model_platform_env == 'azure':
+            agent_config = {
+                "model_type": ModelType.O1,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.AZURE,
+            }
+        else:
+            agent_config = {
+                "model_type": ModelType.O1,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.OPENAI,
+                # "model_name": 'o1'
+            }
     elif model_type == 'o3':
-        agent_config = {
-            "model_type": ModelType.O3,
-            "model_config": ChatGPTConfig().as_dict(),
-            "model_platform": ModelPlatformType.OPENAI,
-        }
+        # Check if Azure platform is requested via environment variable
+        if model_platform_env == 'azure':
+            agent_config = {
+                "model_type": ModelType.O3,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.AZURE,
+            }
+        else:
+            agent_config = {
+                "model_type": ModelType.O3,
+                "model_config": ChatGPTConfig().as_dict(),
+                "model_platform": ModelPlatformType.OPENAI,
+            }
     elif model_type == 'vllm_qwen_vl':
         agent_config = {
             "model_type": "Qwen/Qwen2.5-VL-7B-Instruct",

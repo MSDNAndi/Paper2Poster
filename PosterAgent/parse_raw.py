@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from utils.src.utils import get_json_from_response
 from utils.src.model_utils import parse_pdf
 import json

@@ -66,15 +66,15 @@ class AzureOpenAIModel(BaseModelBackend):
         if model_config_dict is None:
             model_config_dict = ChatGPTConfig().as_dict()
         api_key = api_key or os.environ.get("AZURE_OPENAI_API_KEY")
-        url = url or os.environ.get("AZURE_OPENAI_BASE_URL")
+        url = url or os.environ.get("AZURE_OPENAI_BASE_URL") or os.environ.get("AZURE_OPENAI_ENDPOINT")
         super().__init__(
             model_type, model_config_dict, api_key, url, token_counter
         )
 
-        self.api_version = api_version or os.environ.get("AZURE_API_VERSION")
+        self.api_version = api_version or os.environ.get("AZURE_API_VERSION") or os.environ.get("AZURE_OPENAI_API_VERSION")
         self.azure_deployment_name = azure_deployment_name or os.environ.get(
             "AZURE_DEPLOYMENT_NAME"
-        )
+        ) or os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
         if self.api_version is None:
             raise ValueError(
                 "Must provide either the `api_version` argument "
