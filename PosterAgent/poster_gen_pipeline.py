@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import argparse
 import time
 
@@ -8,6 +9,8 @@ from PosterAgent.gen_poster_content import gen_poster_content
 from PosterAgent.fill_and_style import fill_poster_content, stylize_poster
 from PosterAgent.deoverflow import deoverflow
 from PosterAgent.apply_theme import poster_apply_theme
+
+load_dotenv()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

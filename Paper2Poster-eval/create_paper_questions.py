@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
 from utils.poster_eval_utils import *
 import argparse
 import os
 import json
+
+load_dotenv()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

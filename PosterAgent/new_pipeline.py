@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from PosterAgent.parse_raw import parse_raw, gen_image_and_table
 from PosterAgent.gen_outline_layout import filter_image_table, gen_outline_layout_v2
 from utils.wei_utils import get_agent_config, utils_functions, run_code, style_bullet_content, scale_to_target_area
@@ -11,6 +12,8 @@ import argparse
 import json
 import os
 import time
+
+load_dotenv()
 
 units_per_inch = 25
 
