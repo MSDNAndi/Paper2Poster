@@ -14,6 +14,7 @@ from urllib.parse import quote_from_bytes, quote
 from PIL import Image
 import os
 import copy
+import json
 import io
 from utils.src.utils import ppt_to_images
 from playwright.sync_api import sync_playwright
@@ -23,6 +24,23 @@ import asyncio
 from utils.pptx_utils import *
 from utils.critic_utils import *
 
+def get_model_config_with_overrides(config_class):
+    """Get model config with custom overrides from MODEL_CONFIG environment variable"""
+    base_config = config_class().as_dict()
+    
+    # Check for custom model configuration in environment variable
+    model_config_env = os.environ.get('MODEL_CONFIG', '').strip()
+    if model_config_env:
+        try:
+            custom_config = json.loads(model_config_env)
+            # Merge custom config with base config
+            base_config.update(custom_config)
+        except json.JSONDecodeError as e:
+            print(f"Warning: Failed to parse MODEL_CONFIG environment variable: {e}")
+            print(f"Using default model configuration.")
+    
+    return base_config
+
 def get_agent_config(model_type):
     # Check environment variables for platform override
     model_platform_env = os.environ.get('MODEL_PLATFORM', '').lower()
@@ -31,7 +49,7 @@ def get_agent_config(model_type):
     if model_type == 'qwen':
         agent_config = {
             "model_type": ModelType.DEEPINFRA_QWEN_2_5_72B,
-            "model_config": QwenConfig().as_dict(),
+            "model_config": get_model_config_with_overrides(QwenConfig),
             "model_platform": ModelPlatformType.DEEPINFRA,
         }
     elif model_type == 'gemini':
@@ -104,19 +122,19 @@ def get_agent_config(model_type):
     elif model_type == 'o3-mini':
         agent_config = {
             "model_type": ModelType.O3_MINI,
-            "model_config": ChatGPTConfig().as_dict(),
+            "model_config": get_model_config_with_overrides(ChatGPTConfig),
             "model_platform": ModelPlatformType.OPENAI,
         }
     elif model_type == 'gpt-4.1':
         agent_config = {
             "model_type": ModelType.GPT_4_1,
-            "model_config": ChatGPTConfig().as_dict(),
+            "model_config": get_model_config_with_overrides(ChatGPTConfig),
             "model_platform": ModelPlatformType.OPENAI,
         }
     elif model_type == 'gpt-4.1-mini':
         agent_config = {
             "model_type": ModelType.GPT_4_1_MINI,
-            "model_config": ChatGPTConfig().as_dict(),
+            "model_config": get_model_config_with_overrides(ChatGPTConfig),
             "model_platform": ModelPlatformType.OPENAI,
         }
     elif model_type == '4o':
@@ -124,13 +142,13 @@ def get_agent_config(model_type):
         if model_platform_env == 'azure':
             agent_config = {
                 "model_type": ModelType.GPT_4O,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.AZURE,
             }
         else:
             agent_config = {
                 "model_type": ModelType.GPT_4O,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.OPENAI,
                 # "model_name": '4o'
             }
@@ -139,13 +157,13 @@ def get_agent_config(model_type):
         if model_platform_env == 'azure':
             agent_config = {
                 "model_type": ModelType.GPT_4O_MINI,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.AZURE,
             }
         else:
             agent_config = {
                 "model_type": ModelType.GPT_4O_MINI,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.OPENAI,
             }
     elif model_type == 'o1':
@@ -153,13 +171,13 @@ def get_agent_config(model_type):
         if model_platform_env == 'azure':
             agent_config = {
                 "model_type": ModelType.O1,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.AZURE,
             }
         else:
             agent_config = {
                 "model_type": ModelType.O1,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.OPENAI,
                 # "model_name": 'o1'
             }
@@ -168,13 +186,13 @@ def get_agent_config(model_type):
         if model_platform_env == 'azure':
             agent_config = {
                 "model_type": ModelType.O3,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.AZURE,
             }
         else:
             agent_config = {
                 "model_type": ModelType.O3,
-                "model_config": ChatGPTConfig().as_dict(),
+                "model_config": get_model_config_with_overrides(ChatGPTConfig),
                 "model_platform": ModelPlatformType.OPENAI,
             }
     elif model_type == 'vllm_qwen_vl':
