@@ -88,7 +88,6 @@ class AzureOpenAIModel(BaseModelBackend):
 
         self._client = AzureOpenAI(
             azure_endpoint=str(self._url),
-            azure_deployment=self.azure_deployment_name,
             api_version=self.api_version,
             api_key=self._api_key,
             timeout=180,
