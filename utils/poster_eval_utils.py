@@ -1182,7 +1182,20 @@ def gen_eval_markdown(paper_name, poster_method, poster_path, figure_count_only=
 
 def get_questions(paper_text, mode, model_type):
     from dotenv import load_dotenv
-    load_dotenv()
+    from pathlib import Path
+    
+    # Find the project root and load .env file
+    def find_project_root():
+        current = Path(__file__).resolve()
+        for parent in current.parents:
+            if (parent / 'requirements.txt').exists() and (parent / 'PosterAgent').exists():
+                return parent
+        return current.parent
+    
+    project_root = find_project_root()
+    dotenv_path = project_root / '.env'
+    load_dotenv(dotenv_path)
+    
     agent_name = f'generate_question_{mode}'
     with open(f"utils/prompt_templates/{agent_name}.yaml", "r") as f:
         config = yaml.safe_load(f)
