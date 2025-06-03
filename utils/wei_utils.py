@@ -26,20 +26,19 @@ from utils.critic_utils import *
 
 def get_model_config_with_overrides(config_class):
     """Get model config with custom overrides from MODEL_CONFIG environment variable"""
-    base_config = config_class().as_dict()
-    
     # Check for custom model configuration in environment variable
     model_config_env = os.environ.get('MODEL_CONFIG', '').strip()
     if model_config_env:
         try:
             custom_config = json.loads(model_config_env)
-            # Merge custom config with base config
-            base_config.update(custom_config)
+            # Use only the custom config when present, don't merge with defaults
+            return custom_config
         except json.JSONDecodeError as e:
             print(f"Warning: Failed to parse MODEL_CONFIG environment variable: {e}")
             print(f"Using default model configuration.")
     
-    return base_config
+    # Only use default config if no MODEL_CONFIG is specified
+    return config_class().as_dict()
 
 def get_agent_config(model_type):
     # Check environment variables for platform override
